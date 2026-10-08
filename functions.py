@@ -2,8 +2,6 @@ import streamlit as st
 import os
 import time
 from pathlib import Path
-import wave
-import pyaudio
 from pydub import AudioSegment
 from audiorecorder import audiorecorder
 import numpy as np
@@ -128,26 +126,10 @@ def play_wav(audio_output_file_path, speed=1.0):
 
         modified_audio.export(audio_output_file_path, format="wav")
 
-    # PyAudioで再生
-    with wave.open(audio_output_file_path, 'rb') as play_target_file:
-        p = pyaudio.PyAudio()
-        stream = p.open(
-            format=p.get_format_from_width(play_target_file.getsampwidth()),
-            channels=play_target_file.getnchannels(),
-            rate=play_target_file.getframerate(),
-            output=True
-        )
+    with open(audio_output_file_path, "rb") as audio_file:
+        audio_data = audio_file.read()
 
-        data = play_target_file.readframes(1024)
-        while data:
-            stream.write(data)
-            data = play_target_file.readframes(1024)
-
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
-    
-    # LLMからの回答の音声ファイルを削除
+    st.audio(audio_data, format="audio/wav")
     os.remove(audio_output_file_path)
 
 def create_chain(system_template):

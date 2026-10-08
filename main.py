@@ -334,7 +334,7 @@ if st.session_state.start_flg:
     if st.session_state.mode == ct.MODE_1:
         # 音声入力を受け取って音声ファイルを作成
         audio_input_file_path = f"{ct.AUDIO_INPUT_DIR}/audio_input_{int(time.time())}.wav"
-        audio_recorded = ft.record_audio(audio_input_file_path)
+        audio_recorded, audio_input_file_path = ft.record_audio(audio_input_file_path)
         
         if not audio_recorded:
             st.error("音声録音に失敗しました。再度お試しください。")
